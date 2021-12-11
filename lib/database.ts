@@ -8,7 +8,7 @@ import {
   setDoc,
 } from "@firebase/firestore";
 import { User } from "./auth";
-import { ISite } from "../types/site";
+import { IFeedback, ISite } from "@typings";
 
 const firestore = getFirestore(firebaseApp);
 
@@ -20,4 +20,10 @@ export const createSite = (
   data: Omit<ISite, "id">,
 ): Promise<DocumentReference> => {
   return addDoc(collection(firestore, "sites"), data);
+};
+
+export const createFeedback = (
+  data: Omit<IFeedback, "id">,
+): Promise<DocumentReference> => {
+  return addDoc(collection(firestore, "feedback"), data);
 };

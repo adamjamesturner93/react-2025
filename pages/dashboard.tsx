@@ -3,8 +3,8 @@ import SiteTableSkeleton from "@components/SiteTableSkeleton";
 import DashboardShell from "@components/DashboardShell";
 import useSWR from "swr";
 import { fetcher } from "@utils/fetcher";
-import { ISite } from "../types/site";
 import SiteTable from "@components/SiteTable";
+import { ISite } from "@typings";
 
 export default function Home(): JSX.Element {
   const { data } = useSWR<{ sites: ISite[] }>("/api/sites", fetcher);

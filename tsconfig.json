@@ -3,10 +3,12 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "typeRoots": ["./types"],
     "paths": {
       "@components/*": ["components/*"],
       "@lib/*": ["lib/*"],
       "@styles/*": ["styles/*"],
+      "@typings": ["types/index"],
       "@utils/*": ["utils/*"]
     },
     "jsx": "preserve",

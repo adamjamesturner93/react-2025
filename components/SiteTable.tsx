@@ -1,8 +1,9 @@
 import { FC } from "react";
-import { Table, Tr, Th, Td } from "./Table";
-import { parseISO, format } from "date-fns";
+import { Table, Td, Th, Tr } from "./Table";
+import { format, parseISO } from "date-fns";
 import { Box, Link } from "@chakra-ui/react";
-import { ISite } from "../types/site";
+import { ISite } from "@typings";
+import NextLink from "next/link";
 
 const SiteTable: FC<{ sites: ISite[] }> = ({ sites }) => {
   return (
@@ -22,7 +23,9 @@ const SiteTable: FC<{ sites: ISite[] }> = ({ sites }) => {
             <Td fontWeight="medium">{site.name}</Td>
             <Td>{site.url}</Td>
             <Td>
-              <Link>View Feedback</Link>
+              <NextLink href={"/p/[siteId]"} as={`/p/${site.id}`} passHref>
+                <Link>View Feedback</Link>
+              </NextLink>
             </Td>
             <Td>{format(parseISO(site.createdAt), "PPpp")}</Td>
           </Box>
