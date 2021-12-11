@@ -1,5 +1,4 @@
-import firestore from "./firebase-admin";
-import db from "@lib/firebase-admin";
+import { firestore } from "./firebase-admin";
 import { IFeedback, ISite } from "@typings";
 import { compareDesc, parseISO } from "date-fns";
 
@@ -35,7 +34,7 @@ export const getAllSites = async (): Promise<{
   error?: Error;
 }> => {
   try {
-    const snapshot = await db.collection("sites").get();
+    const snapshot = await firestore.collection("sites").get();
     const sites = snapshot.docs.map(
       (snap) =>
         ({
@@ -48,4 +47,23 @@ export const getAllSites = async (): Promise<{
     const error = e as Error;
     return { error };
   }
+};
+
+export const getAllSitesForUser = async (
+  userId: string,
+): Promise<{
+  sites?: ISite[];
+}> => {
+  const snapshot = await firestore
+    .collection("sites")
+    .where("authorId", "==", userId)
+    .get();
+  const sites = snapshot.docs.map(
+    (snap) =>
+      ({
+        id: snap.id,
+        ...snap.data(),
+      } as ISite),
+  );
+  return { sites };
 };

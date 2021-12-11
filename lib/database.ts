@@ -13,6 +13,7 @@ import { IFeedback, ISite } from "@typings";
 const firestore = getFirestore(firebaseApp);
 
 export const createUser = (uid: string, data: User): Promise<void> => {
+  delete data?.token;
   return setDoc(doc(firestore, "users", uid), data, { merge: true });
 };
 

@@ -14,6 +14,15 @@ export default function Home(): JSX.Element {
       height={"100vh"}
     >
       <Head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            if (document.cookie && document.cookie.includes('ff-auth')) {
+              window.location.href="/dashboard";
+            }
+          `,
+          }}
+        />
         <title>Fast Feedback</title>
       </Head>
 

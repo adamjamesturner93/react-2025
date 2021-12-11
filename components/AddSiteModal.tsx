@@ -43,7 +43,7 @@ export const AddSiteModal: FC = ({ children }) => {
       isClosable: true,
     });
     await mutate(
-      "/api/sites",
+      ["/api/sites", auth.user?.token],
       async ({ sites }: { sites: ISite[] }) => ({
         sites: [newSite, ...sites],
       }),

@@ -9,9 +9,11 @@ import {
 } from "@firebase/auth";
 import firebaseApp from "./firebase";
 import { createUser } from "./database";
+import cookie from "js-cookie";
 
 export type User = {
   uid: string;
+  token?: string;
   email: string | null;
   name: string | null;
   provider: string;
@@ -28,13 +30,15 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 const formatUser = ({
   uid,
+  accessToken,
   email,
   displayName,
   providerData,
   photoURL,
-}: FirebaseUser): User => ({
+}: FirebaseUser & { accessToken: string }): User => ({
   uid,
   email,
+  token: accessToken,
   name: displayName,
   provider: providerData[0].providerId,
   photoUrl: photoURL,
@@ -50,9 +54,14 @@ export const AuthProvider: FC = ({ children }) => {
       setUser(undefined);
       return;
     }
-    const user = formatUser(rawUser);
-    await createUser(user.uid, user);
+    const user = formatUser(rawUser as FirebaseUser & { accessToken: string });
+
+    await createUser(user.uid, { ...user });
     setUser(user);
+    cookie.set("ff-auth", JSON.stringify(true), {
+      expires: 1,
+      sameSite: "strict",
+    });
     return user;
   };
 
@@ -63,6 +72,7 @@ export const AuthProvider: FC = ({ children }) => {
 
   const signout = async () => {
     await signOut(auth);
+    cookie.remove("ff-auth");
     return handleUser();
   };
 

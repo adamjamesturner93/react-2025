@@ -31,7 +31,9 @@ const DashboardShell: FC = ({ children }) => {
           <Link>Sites</Link>
         </Stack>
         <Stack spacing={4} isInline justifyContent="center" alignItems="center">
-          <Link>Account</Link>
+          <Link onClick={auth.signout} href={"/"}>
+            Log out
+          </Link>
           <Avatar size="sm" src={auth.user?.photoUrl || ""} />
         </Stack>
       </Flex>
