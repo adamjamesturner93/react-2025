@@ -29,24 +29,16 @@ export const getAllFeedback = async (
   }
 };
 
-export const getAllSites = async (): Promise<{
-  sites?: ISite[];
-  error?: Error;
-}> => {
-  try {
-    const snapshot = await firestore.collection("sites").get();
-    const sites = snapshot.docs.map(
-      (snap) =>
-        ({
-          id: snap.id,
-          ...snap.data(),
-        } as ISite),
-    );
-    return { sites };
-  } catch (e) {
-    const error = e as Error;
-    return { error };
-  }
+export const getAllSites = async (): Promise<{ sites: ISite[] }> => {
+  const snapshot = await firestore.collection("sites").get();
+  const sites = snapshot.docs.map(
+    (snap) =>
+      ({
+        id: snap.id,
+        ...snap.data(),
+      } as ISite),
+  );
+  return { sites };
 };
 
 export const getAllSitesForUser = async (

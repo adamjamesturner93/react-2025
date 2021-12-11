@@ -22,7 +22,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { sites } = await getAllSites();
-  const paths = (sites || []).map((site) => ({
+  const paths = sites.map((site) => ({
     params: {
       siteId: site.id.toString(),
     },
@@ -41,6 +41,7 @@ const SiteFeedback: FC<{ initialFeedback: IFeedback[] }> = ({
   const inputEl = useRef<HTMLInputElement>(null);
 
   const [allFeedback, setAllFeedback] = useState<IFeedback[]>(initialFeedback);
+  console.log(initialFeedback);
 
   const onSubmit: EventHandler<any> = async (event) => {
     event.preventDefault();
@@ -81,7 +82,7 @@ const SiteFeedback: FC<{ initialFeedback: IFeedback[] }> = ({
           </Button>
         </FormControl>
       </Box>
-      {allFeedback.map((feedback) => (
+      {allFeedback?.map((feedback) => (
         <Feedback
           key={feedback.id}
           author={feedback.author}
