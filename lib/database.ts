@@ -16,6 +16,8 @@ export const createUser = (uid: string, data: User): Promise<void> => {
   return setDoc(doc(firestore, "users", uid), data, { merge: true });
 };
 
-export const createSite = (data: ISite): Promise<DocumentReference> => {
+export const createSite = (
+  data: Omit<ISite, "id">,
+): Promise<DocumentReference> => {
   return addDoc(collection(firestore, "sites"), data);
 };

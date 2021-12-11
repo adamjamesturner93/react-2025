@@ -1,11 +1,25 @@
-import { useAuth } from "@lib/auth";
 import EmptyState from "@components/EmptyState";
+import SiteTableSkeleton from "@components/SiteTableSkeleton";
+import DashboardShell from "@components/DashboardShell";
+import useSWR from "swr";
+import { fetcher } from "@utils/fetcher";
+import { ISite } from "../types/site";
+import SiteTable from "@components/SiteTable";
 
 export default function Home(): JSX.Element {
-  const auth = useAuth();
-  if (!auth.user) {
-    return <p>Loading...</p>;
+  const { data } = useSWR<{ sites: ISite[] }>("/api/sites", fetcher);
+
+  if (!data) {
+    return (
+      <DashboardShell>
+        <SiteTableSkeleton />
+      </DashboardShell>
+    );
   }
 
-  return <EmptyState />;
+  return (
+    <DashboardShell>
+      {data.sites ? <SiteTable sites={data.sites} /> : <EmptyState />}
+    </DashboardShell>
+  );
 }

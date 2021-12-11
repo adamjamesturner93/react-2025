@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useRef } from "react";
+import React, { FC, Fragment } from "react";
 import {
   Button,
   FormControl,
@@ -12,33 +12,53 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { createSite } from "@lib/database";
 import { ISite } from "../types/site";
+import { useAuth } from "@lib/auth";
+import { mutate } from "swr";
 
-export const AddSiteModal: FC = () => {
+export const AddSiteModal: FC = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<ISite>();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
+  const auth = useAuth();
+  const { handleSubmit, register } = useForm<Pick<ISite, "name" | "url">>();
 
-  const onSubmit: SubmitHandler<ISite> = async (values) => {
-    console.log({ values, errors });
-    const site = await createSite(values);
-    console.log({ site });
+  const onSubmit: SubmitHandler<ISite> = async ({ name, url }) => {
+    const newSite = {
+      authorId: auth.user?.uid || "",
+      createdAt: new Date().toISOString(),
+      name: name,
+      url: url,
+    };
+    await createSite(newSite);
+
+    toast({
+      title: "Success",
+      description: "We've added your site",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+    await mutate(
+      "/api/sites",
+      async ({ sites }: { sites: ISite[] }) => ({
+        sites: [newSite, ...sites],
+      }),
+      false,
+    );
+    onClose();
   };
 
   return (
     <Fragment>
       <Button onClick={onOpen} fontWeight={"medium"} variant="solid" size="md">
-        Add Your First Site
+        {children}
       </Button>
 
-      <Modal initialFocusRef={inputRef} isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent as={"form"} onSubmit={handleSubmit(onSubmit)}>
           <ModalHeader fontWeight={"bold"}>Add Site</ModalHeader>
@@ -48,7 +68,7 @@ export const AddSiteModal: FC = () => {
               <FormLabel>Name</FormLabel>
               <Input
                 placeholder="My site"
-                {...register("url", {
+                {...register("name", {
                   required: true,
                 })}
               />
@@ -58,7 +78,7 @@ export const AddSiteModal: FC = () => {
               <FormLabel>Link</FormLabel>
               <Input
                 placeholder="https://website.com"
-                {...register("link", {
+                {...register("url", {
                   required: true,
                 })}
               />

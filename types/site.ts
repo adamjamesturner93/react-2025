@@ -1,5 +1,7 @@
 export interface ISite {
-  id?: string;
+  id: string;
+  authorId: string;
+  createdAt: string;
+  name: string;
   url: string;
-  link: string;
 }

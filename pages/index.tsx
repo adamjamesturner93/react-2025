@@ -20,7 +20,9 @@ export default function Home(): JSX.Element {
       <Logo color={"black"} boxSize={7} />
 
       {auth.user ? (
-        <Button onClick={auth.signout}>Sign Out</Button>
+        <Button as="a" href="/dashboard">
+          View Dashboard
+        </Button>
       ) : (
         <Button mt={4} size={"sm"} onClick={auth.signInWithGithub}>
           Sign In
