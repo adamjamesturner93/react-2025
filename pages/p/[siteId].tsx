@@ -16,7 +16,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       initialFeedback: feedback,
     },
-    revalidate: 1,
+    revalidate: 60,
   };
 };
 
@@ -29,7 +29,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }));
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
